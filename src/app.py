@@ -75,10 +75,8 @@ def consulto_un_usuario(usuario_id):
     return jsonify(response_body), 200
 
 # Obtener todos los planetas
-
 @app.route('/planetas', methods=['GET'])
 def obtener_planetas():
-
 
     planetas_query = Planetas.query.all ()
 
@@ -89,12 +87,11 @@ def obtener_planetas():
         return jsonify ({"msg":"No hay planetas"}), 404
 
     response_body = {
-        "msg": "Hola, estos son los planetas ",
+        "msg": "Estos son los planetas ",
         "results": results
     }
 
     return jsonify(response_body), 200
-
 
     # Obtener  un planeta
 @app.route('/planeta/<int:planeta_id>', methods=['GET'])
@@ -102,18 +99,17 @@ def consulto_un_planeta(planeta_id):
 
     planeta_query = Planetas.query.filter_by (id=planeta_id).first ()
 
-
     if planeta_query is None :
-        return jsonify ({"msg":"no existe este planeta"}), 404
+        return jsonify ({"msg":"No existe este planeta"}), 404
 
     response_body = {
-        "msg": "Hola, este es el planeta consultado ",
+        "msg": "Este es el planeta",
         "results": planeta_query.serialize()
     }
 
     return jsonify(response_body), 200
 
- # Obtener todos los personajes
+# Obtener todos los personajes
 @app.route('/personajes', methods=['GET'])
 def obtener_personajes():
 
@@ -126,13 +122,13 @@ def obtener_personajes():
         return jsonify ({"msg":"No hay personajes"}), 404
 
     response_body = {
-        "msg": "Hola, estos son los personajes ",
+        "msg": "Estos son los personajes ",
         "results": results
     }
 
     return jsonify(response_body), 200
 
-
+# Obtener  un personaje
 @app.route('/personajes/<int:personaje_id>', methods=['GET'])
 def consulto_un_personaje(personaje_id):
 
@@ -140,13 +136,12 @@ def consulto_un_personaje(personaje_id):
 
 
     if personaje_query is None :
-        return jsonify ({"msg":"no existe este personaje"}), 404
+        return jsonify ({"msg":"No existe este personaje"}), 404
 
     response_body = {
-        "msg": "Hola, este es el personaje consultado ",
+        "msg": "Este es el personaje consultado ",
         "results": personaje_query.serialize()
     }
-
 
     return jsonify(response_body), 200
 
@@ -169,6 +164,7 @@ def obtener_vehiculos():
 
     return jsonify(response_body), 200
 
+# Obtener  un vehiculo
 @app.route('/vehiculos/<int:vehiculo_id>', methods=['GET'])
 def consulto_un_vehiculo(vehiculo_id):
 
@@ -184,7 +180,7 @@ def consulto_un_vehiculo(vehiculo_id):
 
     return jsonify(response_body), 200
 
-
+# Obtener todos los Starships
 @app.route('/starships', methods=['GET'])
 def obtener_starships():
 
@@ -203,6 +199,7 @@ def obtener_starships():
 
     return jsonify(response_body), 200
 
+# Obtener  un starships
 @app.route('/starships/<int:starship_id>', methods=['GET'])
 def consulto_un_starship(starship_id):
 
@@ -237,8 +234,7 @@ def obtener_favoritos():
 
     return jsonify(response_body), 200
 
-
-    # Obtener  un favorito para un usuario
+# Obtener  un favorito para un usuario
 @app.route('/users/<int:id>/favoritos', methods=['GET'])
 def consulto_un_favorito(id):
 
@@ -253,10 +249,9 @@ def consulto_un_favorito(id):
         "results": response
     }
 
-
     return jsonify(response_body), 200
 
-#   Agregar planeta a favorito
+#Agregar planeta a favorito
 @app.route('/favoritos/planetas/<int:planetas_id>', methods=['POST'])
 def crear_planeta_favorito(planetas_id):
 
@@ -266,12 +261,12 @@ def crear_planeta_favorito(planetas_id):
     if user_query is None:
         return jsonify({"msg": "el usuario no está registrado"}), 404
 
-    planeta_query = Planetas.query.filter_by(id = planetas_id).first()
+    planeta_query = Planetas.query.filter_by(id = planetas_id).first() 
     if planeta_query is None:
         return jsonify({"msg": "El planeta no existe"}), 404
 
-    fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(planetas_id =planetas_id).first()
-    if fav_query:    
+    fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(planetas_id =planetas_id).first() 
+    if fav_query:   
             return jsonify({"msg": "El planeta ya existe en favoritos, no se volverá a agregar"}), 400
 
     nuevo_planeta_favorito=Favoritos(user_id= request_body["user_id"], planetas_id=planetas_id)
@@ -291,6 +286,7 @@ def crear_planeta_favorito(planetas_id):
     
     return jsonify(request_body), 200
 
+#   Agregar personajes a favorito
 @app.route('/favoritos/personajes/<int:personajes_id>', methods=['POST'])
 def crear_personaje_favorito(personajes_id):
 
@@ -300,22 +296,20 @@ def crear_personaje_favorito(personajes_id):
     if user_query is None:
         return jsonify({"msg": "el usuario no está registrado"}), 404
 
-    personaje_query = Personajes.query.filter_by(id = personajes_id).first() 
+    personaje_query = Personajes.query.filter_by(id = personajes_id).first()
     if personaje_query is None:
         return jsonify({"msg": "El personaje no existe"}), 404
 
     fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(personajes_id =personajes_id).first() 
-    if fav_query:    
+    if fav_query: 
             return jsonify({"msg": "El personaje ya existe en favoritos, no se volverá a agregar"}), 400
         
-
     nuevo_personaje_favorito=Favoritos(user_id= request_body["user_id"], personajes_id=personajes_id)
     personajes_query = Personajes.query.filter_by(id=personajes_id).first()
 
     request_body = {
         "msg": "Personaje agregado a favoritos"
     }
-
 
     db.session.add(nuevo_personaje_favorito)
     db.session.commit()
@@ -332,19 +326,20 @@ def crear_vehiculo_favorito(vehiculos_id):
 
     request_body = request.get_json(force=True) 
 
+
     user_query = User.query.filter_by(id=request_body["user_id"]).first()
     if user_query is None:
         return jsonify({"msg": "el usuario no está registrado"}), 404
 
+ 
     vehiculo_query = Vehiculos.query.filter_by(id = vehiculos_id).first() 
     if vehiculo_query is None:
         return jsonify({"msg": "El vehiculo no existe"}), 404
 
-    fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(vehiculos_id =vehiculos_id).first()
-    if fav_query:    
+    fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(vehiculos_id =vehiculos_id).first() 
+    if fav_query: 
             return jsonify({"msg": "El vehículo ya existe en favoritos, no se volverá a agregar"}), 400
         
-
     nuevo_vehiculo_favorito=Favoritos(user_id= request_body["user_id"], vehiculos_id=vehiculos_id)
     vehiculo_query = Vehiculos.query.filter_by(id=vehiculos_id).first()
 
@@ -362,22 +357,22 @@ def crear_vehiculo_favorito(vehiculos_id):
     
     return jsonify(request_body), 200
 
-
 #   Eliminar un personaje a favorito
 @app.route('/favoritos/personajes/<int:personajes_id>', methods=['DELETE'])
 def eliminar_personaje_favorito(personajes_id):
 
-    request_body = request.get_json(force=True) 
+    request_body = request.get_json(force=True)
 
     user_query = User.query.filter_by(id=request_body["user_id"]).first()
     if user_query is None:
         return jsonify({"msg": "el usuario no está registrado"}), 404
 
-    personaje_query = Personajes.query.filter_by(id = personajes_id).first()
+    personaje_query = Personajes.query.filter_by(id = personajes_id).first() 
     if personaje_query is None:
         return jsonify({"msg": "El personaje no existe"}), 404
 
-    fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(personajes_id =personajes_id).first() 
+
+    fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(personajes_id =personajes_id).first()
 
     nuevo_personaje_favorito=Favoritos(user_id= request_body["user_id"], personajes_id=personajes_id)
     personajes_query = Personajes.query.filter_by(id=personajes_id).first()
@@ -396,22 +391,19 @@ def eliminar_personaje_favorito(personajes_id):
     
     return jsonify(request_body), 200
 
-
 # Eliminar planetas en favoritos
-
 @app.route('/favoritos/planetas/<int:planetas_id>', methods=['DELETE'])
 def eliminar_planeta_favorito(planetas_id):
 
-    request_body = request.get_json(force=True) 
-
+    request_body = request.get_json(force=True)
     user_query = User.query.filter_by(id=request_body["user_id"]).first()
     if user_query is None:
         return jsonify({"msg": "el usuario no está registrado"}), 404
 
-
     planetas_query = Planetas.query.filter_by(id = planetas_id).first() 
     if planetas_query is None:
         return jsonify({"msg": "El planeta no existe"}), 404
+
 
     fav_query = Favoritos.query.filter_by(user_id = request_body["user_id"]).filter_by(planetas_id =planetas_id).first() 
 
@@ -431,14 +423,6 @@ def eliminar_planeta_favorito(planetas_id):
     }
     
     return jsonify(request_body), 200
-
-
-
-   
-
-
-
-
 
 
 # this only runs if `$ python src/app.py` is executed
